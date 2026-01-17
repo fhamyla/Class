@@ -30,17 +30,17 @@ export function Login() {
           <div className="inline-flex p-3 bg-sage rounded-xl shadow-lg mb-4">
             <GraduationCap className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">ClassTrack</h1>
-          <p className="text-gray-600 mt-2">Attendance Management System</p>
+          <h1 className="text-3xl font-bold text-gray-900">Luminara University</h1>
+          <p className="text-gray-600 mt-2">Illuminare Mentem, Excelsior Anima —<br /> Illuminate the Mind, Elevate the Soul</p>
         </div>
 
         <Card className="shadow-xl border-t-4 border-t-sage">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-center text-xl font-semibold text-gray-900">
                 Welcome Back
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-center text-sm text-gray-500">
                 Please sign in to your account
               </p>
             </div>
