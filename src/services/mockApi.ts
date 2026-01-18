@@ -1,4 +1,4 @@
-import { User, Student, AttendanceRecord, AttendanceStatus, Role } from '../types';
+import { User, Student, AttendanceRecord, AttendanceStatus } from '../types';
 
 // Keys for localStorage
 const STORAGE_KEYS = {
@@ -75,7 +75,7 @@ const initializeStorage = () => {
 
 export const mockApi = {
   // Auth
-  login: async (email: string, password: string): Promise<User> => {
+  login: async (email: string): Promise<User> => {
     await delay(500);
     initializeStorage();
 

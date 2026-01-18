@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, Check, X, Save, Loader2 } from 'lucide-react';
-import { Student, AttendanceStatus, AttendanceRecord } from '../../types';
+import { Student, AttendanceStatus } from '../../types';
 import { mockApi } from '../../services/mockApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/Button';

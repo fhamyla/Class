@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Login } from './components/Login';
 import { Navbar } from './components/Navbar';

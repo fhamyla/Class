@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Calendar, CheckCircle, XCircle, Search } from 'lucide-react';
 import { Student, AttendanceStatus } from '../types';
 import { Card } from './ui/Card';

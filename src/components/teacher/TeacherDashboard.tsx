@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Users, Calendar, CheckCircle, XCircle } from 'lucide-react';
 import { mockApi } from '../../services/mockApi';
 import { Student, AttendanceRecord } from '../../types';
@@ -16,7 +16,7 @@ export function TeacherDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!user) return;
     setIsLoading(true);
     try {
@@ -30,10 +30,10 @@ export function TeacherDashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
   useEffect(() => {
     loadData();
-  }, [user]);
+  }, [user, loadData]);
   if (isLoading) return <div className="p-8 text-center">Loading class data...</div>;
   const presentCount = todayAttendance.filter(r => r.status === 'present').length;
   const absentCount = todayAttendance.filter(r => r.status === 'absent').length;

@@ -30,7 +30,9 @@ export function StudentList({
     }
     onAddStudent({
       id: id.trim(),
-      name: name.trim()
+      name: name.trim(),
+      teacherId: '',
+      createdAt: new Date().toISOString()
     });
     setName('');
     setId('');

@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Users, GraduationCap, Plus, Trash2, Search } from 'lucide-react';
+import { Users, GraduationCap, Plus, Trash2 } from 'lucide-react';
 import { mockApi } from '../../services/mockApi';
-import { User } from '../../types';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+interface AdminStats {
+  totalTeachers: number;
+  totalStudents: number;
+  teacherStats: Array<{
+    id: string;
+    name: string;
+    email: string;
+    studentCount: number;
+  }>;
+}
+
 export function AdminDashboard() {
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<AdminStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newTeacherName, setNewTeacherName] = useState('');
-  const [newTeacherEmail, setNewTeacherEmail] = useState('');
+  const [suffix, setSuffix] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const loadData = async () => {
     setIsLoading(true);
     try {
@@ -27,14 +41,33 @@ export function AdminDashboard() {
   }, []);
   const handleAddTeacher = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!suffix.trim() || !firstName.trim() || !lastName.trim() || !email.trim()) {
+      setEmailError('All required fields must be filled (Suffix, First Name, Last Name, Email)');
+      return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+    
     try {
-      await mockApi.createTeacher(newTeacherName, newTeacherEmail);
+      setEmailError('');
+      const fullName = [suffix, firstName, middleName, lastName].filter(Boolean).join(' ').trim();
+      await mockApi.createTeacher(fullName, email);
       setIsAdding(false);
-      setNewTeacherName('');
-      setNewTeacherEmail('');
+      setSuffix('');
+      setFirstName('');
+      setMiddleName('');
+      setLastName('');
+      setEmail('');
       loadData();
     } catch (error) {
-      alert('Failed to create teacher. Email might be taken.');
+      setEmailError('This email is already in use.');
     }
   };
   const handleDeleteTeacher = async (id: string) => {
@@ -44,6 +77,7 @@ export function AdminDashboard() {
     }
   };
   if (isLoading) return <div className="p-8 text-center">Loading dashboard...</div>;
+  if (!stats) return <div className="p-8 text-center">Unable to load dashboard data</div>;
   return <div className="space-y-6 animate-in fade-in duration-500">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -84,16 +118,63 @@ export function AdminDashboard() {
         </div>
 
         {isAdding && <Card className="bg-sage/5 border-sage/20">
-            <form onSubmit={handleAddTeacher} className="flex flex-col sm:flex-row gap-4 items-end">
-              <Input label="Name" value={newTeacherName} onChange={e => setNewTeacherName(e.target.value)} required placeholder="e.g. Mrs. Krabappel" />
-              <Input label="Email" type="email" value={newTeacherEmail} onChange={e => setNewTeacherEmail(e.target.value)} required placeholder="teacher@school.com" />
-              <div className="flex gap-2 w-full sm:w-auto">
-                <Button type="submit">Save</Button>
-                <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
+            <form onSubmit={handleAddTeacher} className="flex flex-col gap-4">
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <Input
+      label="Suffix"
+      value={suffix}
+      onChange={e => setSuffix(e.target.value)}
+      required
+      placeholder="e.g. Jr., Sr., III"
+    />
+
+    <Input
+      label="First Name"
+      value={firstName}
+      onChange={e => setFirstName(e.target.value)}
+      required
+    />
+
+    <Input
+      label="Middle Name (Optional)"
+      value={middleName}
+      onChange={e => setMiddleName(e.target.value)}
+      placeholder="Optional"
+    />
+
+    <Input
+      label="Last Name"
+      value={lastName}
+      onChange={e => setLastName(e.target.value)}
+      required
+    />
+
+    <Input
+      label="Email"
+      type="email"
+      value={email}
+      onChange={e => setEmail(e.target.value)}
+      required
+      className={emailError ? 'border-red-500' : ''}
+      placeholder="teacher@school.com"
+    />
+  </div>
+
+  {emailError && (
+    <p className="text-sm text-red-600">
+      This email is already in use.
+    </p>
+  )}
+
+  <div className="flex gap-2 justify-end">
+    <Button type="submit">Save</Button>
+    <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>
+      Cancel
+    </Button>
+  </div>
+</form>
+
           </Card>}
 
         <div className="bg-white rounded-xl shadow-sm border border-warm-gray/20 overflow-hidden">
@@ -116,7 +197,7 @@ export function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {stats.teacherStats.map((teacher: any) => <tr key={teacher.id} className="hover:bg-gray-50">
+                {stats.teacherStats.map((teacher) => <tr key={teacher.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">
                         {teacher.name}
