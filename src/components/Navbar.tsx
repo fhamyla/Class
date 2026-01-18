@@ -31,7 +31,7 @@ export function Navbar() {
           >
             <UserIcon className="h-3 w-3 sm:h-4 sm:w-4 text-sage-100 flex-shrink-0" />
             <span className="text-xs sm:text-sm font-medium truncate">
-              {user.name.split(' ').slice(-2).join(' ')}
+              {user.name.split(" ").slice(-2).join(" ")}
             </span>
           </div>
 
