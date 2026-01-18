@@ -138,13 +138,22 @@ export function AdminDashboard() {
           <Card className="bg-sage/5 border-sage/20">
             <form onSubmit={handleAddTeacher} className="flex flex-col gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  label="Suffix"
-                  value={suffix}
-                  onChange={(e) => setSuffix(e.target.value)}
-                  required
-                  placeholder="e.g. Jr., Sr., III"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Suffix *
+                  </label>
+                  <select
+                    value={suffix}
+                    onChange={(e) => setSuffix(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage/20 focus:border-sage"
+                  >
+                    <option value="">Select suffix</option>
+                    <option value="Mr.">Mr.</option>
+                    <option value="Ms.">Ms.</option>
+                    <option value="Mrs.">Mrs.</option>
+                  </select>
+                </div>
 
                 <Input
                   label="First Name"
