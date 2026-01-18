@@ -16,7 +16,7 @@ export function Navbar() {
           </div>
           <div>
             <h1 className="text-lg font-bold tracking-tight leading-none">
-              ClassTrack
+              Class
             </h1>
             <p className="text-xs text-sage-100 opacity-90 capitalize">
               {user.role} Portal
@@ -24,10 +24,14 @@ export function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full">
-            <UserIcon className="h-4 w-4 text-sage-100" />
-            <span className="text-sm font-medium">{user.name}</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-2
+          px-2 sm:px-3 
+          py-1 sm:py-1.5 
+          bg-white/10 rounded-full 
+          max-w-[140px] sm:max-w-none">
+            <UserIcon className="h-3 w-3 sm:h-4 sm:w-4 text-sage-100 flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-medium truncate">{user.name}</span>
           </div>
 
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/20 hover:text-white border-transparent" aria-label="Log out">

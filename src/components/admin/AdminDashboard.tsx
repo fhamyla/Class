@@ -32,7 +32,7 @@ export function AdminDashboard() {
       setIsAdding(false);
       setNewTeacherName('');
       setNewTeacherEmail('');
-      loadData(); // Refresh list
+      loadData();
     } catch (error) {
       alert('Failed to create teacher. Email might be taken.');
     }
@@ -73,11 +73,11 @@ export function AdminDashboard() {
 
       {/* Teacher Management */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-xl font-bold text-gray-900">
             Teacher Management
           </h2>
-          <Button onClick={() => setIsAdding(!isAdding)} size="sm">
+          <Button onClick={() => setIsAdding(!isAdding)} size="sm" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add Teacher
           </Button>
