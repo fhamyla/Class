@@ -39,14 +39,14 @@ export function TeacherDashboard() {
   const absentCount = todayAttendance.filter(r => r.status === 'absent').length;
   return <div className="space-y-6 animate-in fade-in duration-500">
       {/* Dashboard Navigation */}
-      <div className="flex space-x-1 bg-white p-1 rounded-lg border border-warm-gray/20 shadow-sm overflow-x-auto">
-        <button onClick={() => setActiveTab('overview')} className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${activeTab === 'overview' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
+      <div className="flex flex-wrap gap-1 bg-white p-1 rounded-lg border border-warm-gray/20 shadow-sm">
+        <button onClick={() => setActiveTab('overview')} className={`flex-1 py-2 px-4 text-xs sm:text-sm font-medium rounded-md transition-colors text-center ${activeTab === 'overview' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
           Overview
         </button>
-        <button onClick={() => setActiveTab('attendance')} className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${activeTab === 'attendance' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
+        <button onClick={() => setActiveTab('attendance')} className={`flex-1 py-2 px-4 text-xs sm:text-sm font-medium rounded-md transition-colors text-center ${activeTab === 'attendance' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
           Mark Attendance
         </button>
-        <button onClick={() => setActiveTab('students')} className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${activeTab === 'students' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
+        <button onClick={() => setActiveTab('students')} className={`flex-1 py-2 px-4 text-xs sm:text-sm font-medium rounded-md transition-colors text-center ${activeTab === 'students' ? 'bg-sage text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}>
           Manage Students
         </button>
       </div>
