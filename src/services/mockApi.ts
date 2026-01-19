@@ -1,203 +1,166 @@
 import { User, Student, AttendanceRecord, AttendanceStatus } from "../types";
 
-// Keys for localStorage
-const STORAGE_KEYS = {
-  USERS: "ams-users",
-  STUDENTS: "ams-students",
-  ATTENDANCE: "ams-attendance",
-  CURRENT_USER: "ams-current-user",
-};
-
-// Seed Data
-const SEED_USERS: User[] = [
-  {
-    id: "admin-1",
-    email: "admin@classtrack.com",
-    name: "Principal Skinner",
-    role: "admin",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "teacher-1",
-    email: "teacher@classtrack.com",
-    name: "Ms. Krabappel",
-    role: "teacher",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "teacher-2",
-    email: "hoover@classtrack.com",
-    name: "Ms. Hoover",
-    role: "teacher",
-    createdAt: new Date().toISOString(),
-  },
-];
-const SEED_STUDENTS: Student[] = [
-  {
-    id: "s1",
-    name: "Bart Simpson",
-    teacherId: "teacher-1",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "s2",
-    name: "Milhouse Van Houten",
-    teacherId: "teacher-1",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "s3",
-    name: "Martin Prince",
-    teacherId: "teacher-1",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "s4",
-    name: "Lisa Simpson",
-    teacherId: "teacher-2",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "s5",
-    name: "Ralph Wiggum",
-    teacherId: "teacher-2",
-    createdAt: new Date().toISOString(),
-  },
-];
-
-// Helper to simulate network delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Initialize Storage if empty
-const initializeStorage = () => {
-  if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+declare global {
+  interface ImportMeta {
+    env: Record<string, string | undefined>;
   }
-  if (!localStorage.getItem(STORAGE_KEYS.STUDENTS)) {
-    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(SEED_STUDENTS));
+}
+
+// API Base URL  
+const API_BASE_URL: string = (import.meta.env.VITE_API_URL) || "http://localhost:5000/api";
+
+// Helper to handle API errors
+const handleApiError = (error: unknown): never => {
+  if (error instanceof Error) {
+    throw error;
   }
-  if (!localStorage.getItem(STORAGE_KEYS.ATTENDANCE)) {
-    localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify([]));
+  const apiError = error as Record<string, unknown>;
+  if (apiError.response && typeof apiError.response === 'object') {
+    const res = apiError.response as Record<string, unknown>;
+    if (res.data && typeof res.data === 'object') {
+      const data = res.data as Record<string, unknown>;
+      if (data.error) {
+        throw new Error(String(data.error));
+      }
+    }
   }
+  throw new Error(String(error));
 };
 
 // --- API Methods ---
 
 export const mockApi = {
   // Auth
-  login: async (email: string): Promise<User> => {
-    await delay(500);
-    initializeStorage();
+  login: async (email: string, password: string): Promise<User> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Mock password check (accept any password for demo if email matches)
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-    const user = users.find((u: User) => u.email === email);
-    if (!user) throw new Error("Invalid credentials");
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
 
-    // In a real app, we'd verify password hash here
-    // For demo: password must be 'admin123' or 'teacher123' etc.
-    // But to keep it simple for the user, we'll just accept the user if found.
-
-    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
-    return user;
+      const user: User = await response.json();
+      localStorage.setItem("ams-current-user", JSON.stringify(user));
+      return user;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   logout: async () => {
-    await delay(200);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    localStorage.removeItem("ams-current-user");
   },
   getCurrentUser: async (): Promise<User | null> => {
-    await delay(100);
-    const stored = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    const stored = localStorage.getItem("ams-current-user");
     return stored ? JSON.parse(stored) : null;
   },
   // Admin: Teachers
   getTeachers: async (): Promise<User[]> => {
-    await delay(300);
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-    return users.filter((u: User) => u.role === "teacher");
-  },
-  createTeacher: async (name: string, email: string): Promise<User> => {
-    await delay(400);
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-    if (users.some((u: User) => u.email === email)) {
-      throw new Error("Email already exists");
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/teachers`);
+      if (!response.ok) throw new Error("Failed to fetch teachers");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
     }
-    const newTeacher: User = {
-      id: `teacher-${Date.now()}`,
-      name,
-      email,
-      role: "teacher",
-      createdAt: new Date().toISOString(),
-    };
-    users.push(newTeacher);
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-    return newTeacher;
   },
-  deleteTeacher: async (id: string) => {
-    await delay(300);
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-    const filtered = users.filter((u: User) => u.id !== id);
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(filtered));
+  createTeacher: async (name: string, email: string, password = "teacher123"): Promise<User> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/teachers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    // Also cleanup students assigned to this teacher?
-    // For simplicity, we'll leave them orphaned or reassign logic would go here.
+      if (!response.ok) {
+        const error: { error?: string } = await response.json();
+        throw new Error(error.error || "Failed to create teacher");
+      }
+
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
+  },
+  deleteTeacher: async (id: string): Promise<void> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/teachers/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete teacher");
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   // Teacher: Students
   getStudentsByTeacher: async (teacherId: string): Promise<Student[]> => {
-    await delay(300);
-    const students = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.STUDENTS) || "[]",
-    );
-    return students.filter((s: Student) => s.teacherId === teacherId);
+    try {
+      const response = await fetch(`${API_BASE_URL}/students?teacherId=${teacherId}`);
+      if (!response.ok) throw new Error("Failed to fetch students");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   getAllStudents: async (): Promise<Student[]> => {
-    await delay(300);
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS) || "[]");
+    try {
+      const response = await fetch(`${API_BASE_URL}/students`);
+      if (!response.ok) throw new Error("Failed to fetch students");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   createStudent: async (name: string, teacherId: string): Promise<Student> => {
-    await delay(300);
-    const students = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.STUDENTS) || "[]",
-    );
-    const newStudent: Student = {
-      id: `student-${Date.now()}`,
-      name,
-      teacherId,
-      createdAt: new Date().toISOString(),
-    };
-    students.push(newStudent);
-    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(students));
-    return newStudent;
+    try {
+      const response = await fetch(`${API_BASE_URL}/students`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, teacherId }),
+      });
+
+      if (!response.ok) throw new Error("Failed to create student");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
-  deleteStudent: async (id: string) => {
-    await delay(300);
-    const students = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.STUDENTS) || "[]",
-    );
-    const filtered = students.filter((s: Student) => s.id !== id);
-    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(filtered));
+  deleteStudent: async (id: string): Promise<void> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/students/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete student");
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   // Attendance
   getAttendance: async (
     date: string,
     teacherId: string,
   ): Promise<AttendanceRecord[]> => {
-    await delay(300);
-    const records = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.ATTENDANCE) || "[]",
-    );
-    return records.filter(
-      (r: AttendanceRecord) => r.date === date && r.teacherId === teacherId,
-    );
+    try {
+      const response = await fetch(`${API_BASE_URL}/attendance?date=${date}&teacherId=${teacherId}`);
+      if (!response.ok) throw new Error("Failed to fetch attendance");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   getStudentAttendanceHistory: async (
     studentId: string,
   ): Promise<AttendanceRecord[]> => {
-    await delay(300);
-    const records = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.ATTENDANCE) || "[]",
-    );
-    return records.filter((r: AttendanceRecord) => r.studentId === studentId);
+    try {
+      const response = await fetch(`${API_BASE_URL}/attendance?studentId=${studentId}`);
+      if (!response.ok) throw new Error("Failed to fetch attendance history");
+      return await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   saveAttendance: async (
     date: string,
@@ -206,48 +169,28 @@ export const mockApi = {
       studentId: string;
       status: AttendanceStatus;
     }[],
-  ) => {
-    await delay(400);
-    const records = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.ATTENDANCE) || "[]",
-    );
+  ): Promise<void> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/attendance`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date, teacherId, updates }),
+      });
 
-    // Remove existing records for this date/teacher/students to avoid duplicates (upsert logic)
-    const studentIds = updates.map((u) => u.studentId);
-    const filteredRecords = records.filter(
-      (r: AttendanceRecord) =>
-        !(r.date === date && studentIds.includes(r.studentId)),
-    );
-    const newRecords = updates.map((u) => ({
-      id: `att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      date,
-      teacherId,
-      studentId: u.studentId,
-      status: u.status,
-      markedAt: new Date().toISOString(),
-    }));
-    localStorage.setItem(
-      STORAGE_KEYS.ATTENDANCE,
-      JSON.stringify([...filteredRecords, ...newRecords]),
-    );
+      if (!response.ok) throw new Error("Failed to save attendance");
+      await response.json();
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
   // Stats
   getAdminStats: async () => {
-    await delay(300);
-    const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || "[]");
-    const students = JSON.parse(
-      localStorage.getItem(STORAGE_KEYS.STUDENTS) || "[]",
-    );
-    const teachers = users.filter((u: User) => u.role === "teacher");
-    const teacherStats = teachers.map((t: User) => ({
-      ...t,
-      studentCount: students.filter((s: Student) => s.teacherId === t.id)
-        .length,
-    }));
-    return {
-      totalTeachers: teachers.length,
-      totalStudents: students.length,
-      teacherStats,
-    };
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/stats`);
+      if (!response.ok) throw new Error("Failed to fetch admin stats");
+      return await response.json();
+    } catch (error) {
+      handleApiError(error);
+    }
   },
 };
