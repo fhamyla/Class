@@ -61,9 +61,9 @@ SELECT current_database();
 SELECT * FROM users;
 
 -- Show all teachers with student count
-SELECT 
-  u.name, 
-  u.email, 
+SELECT
+  u.name,
+  u.email,
   COUNT(s.id) as student_count
 FROM users u
 LEFT JOIN teachers t ON u.id = t.user_id
@@ -85,7 +85,7 @@ WHERE student_id = 'student-uuid'
 ORDER BY date DESC;
 
 -- Calculate absence rate for a student
-SELECT 
+SELECT
   s.name,
   COUNT(*) as total_records,
   SUM(CASE WHEN ar.status = 'absent' THEN 1 ELSE 0 END) as absences,
@@ -99,7 +99,7 @@ GROUP BY s.id, s.name;
 
 ```sql
 -- Create new admin user
-INSERT INTO users (id, email, password_hash, role, name) 
+INSERT INTO users (id, email, password_hash, role, name)
 VALUES ('new-id', 'admin2@test.com', 'hash_here', 'admin', 'New Admin');
 
 -- Change user password (requires bcrypt hash)
@@ -132,7 +132,7 @@ pg_restore -U postgres -d classtrack_db backup.dump
 
 ```sql
 -- Show table sizes
-SELECT 
+SELECT
   schemaname,
   tablename,
   pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
@@ -190,12 +190,14 @@ REINDEX DATABASE classtrack_db;
 ## Common Issues
 
 ### Reset AutoIncrement/Sequence
+
 ```sql
 -- If using sequences
 SELECT setval('table_id_seq', (SELECT MAX(id) FROM table));
 ```
 
 ### Drop All Tables
+
 ```sql
 -- Drop all tables in schema
 DROP SCHEMA public CASCADE;
@@ -203,11 +205,13 @@ CREATE SCHEMA public;
 ```
 
 ### Check Database Size
+
 ```sql
 SELECT pg_size_pretty(pg_database_size('classtrack_db'));
 ```
 
 ### List Active Connections
+
 ```sql
 SELECT datname, usename, application_name, state, query
 FROM pg_stat_activity
@@ -215,6 +219,7 @@ WHERE datname = 'classtrack_db';
 ```
 
 ### Kill Connection
+
 ```sql
 -- For PostgreSQL 13+
 SELECT pg_terminate_backend(pid)

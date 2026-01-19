@@ -9,18 +9,21 @@ PostgreSQL-based backend for the Attendance Management System.
    - During installation, remember the password for the `postgres` user
 
 2. **Create Database**
+
    ```bash
    psql -U postgres
    CREATE DATABASE classtrack_db;
    ```
 
 3. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 4. **Configure Environment**
    Create a `.env` file in the server directory:
+
    ```env
    DB_USER=postgres
    DB_PASSWORD=your_postgres_password
@@ -31,6 +34,7 @@ PostgreSQL-based backend for the Attendance Management System.
    ```
 
 5. **Initialize Database**
+
    ```bash
    npm run migrate
    ```
@@ -45,6 +49,7 @@ Server will run on `http://localhost:5000`
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - Login with email and password
 - `GET /api/auth/user/:id` - Get user by ID
 - `GET /api/auth/teachers` - Get all teachers (admin only)
@@ -52,17 +57,20 @@ Server will run on `http://localhost:5000`
 - `DELETE /api/auth/teachers/:id` - Delete teacher (admin only)
 
 ### Students
+
 - `GET /api/students?teacherId=...` - Get students by teacher
 - `GET /api/students` - Get all students
 - `POST /api/students` - Create student
 - `DELETE /api/students/:id` - Delete student
 
 ### Attendance
+
 - `GET /api/attendance?date=YYYY-MM-DD&teacherId=...` - Get attendance records
 - `GET /api/attendance?studentId=...` - Get student attendance history
 - `POST /api/attendance` - Save attendance records
 
 ### Admin
+
 - `GET /api/admin/stats` - Get admin statistics
 
 ## Default Credentials

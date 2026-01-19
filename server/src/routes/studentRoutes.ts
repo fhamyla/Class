@@ -1,15 +1,15 @@
-import express, { Request, Response } from 'express';
-import { 
-  getStudentsByTeacher, 
-  getAllStudents, 
-  createStudent, 
-  deleteStudent 
-} from '../services/studentService.js';
+import express, { Request, Response } from "express";
+import {
+  getStudentsByTeacher,
+  getAllStudents,
+  createStudent,
+  deleteStudent,
+} from "../services/studentService.js";
 
 const router = express.Router();
 
 // GET /api/students?teacherId=...
-router.get('/', async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const { teacherId } = req.query;
 
@@ -21,36 +21,36 @@ router.get('/', async (req: Request, res: Response) => {
     const students = await getAllStudents();
     res.json(students);
   } catch (error) {
-    console.error('Error getting students:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error getting students:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // POST /api/students
-router.post('/', async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   try {
     const { name, teacherId } = req.body;
 
     if (!name || !teacherId) {
-      return res.status(400).json({ error: 'Name and teacherId are required' });
+      return res.status(400).json({ error: "Name and teacherId are required" });
     }
 
     const student = await createStudent(name, teacherId);
     res.status(201).json(student);
   } catch (error) {
-    console.error('Error creating student:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error creating student:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // DELETE /api/students/:id
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
     await deleteStudent(req.params.id);
     res.json({ success: true });
   } catch (error) {
-    console.error('Error deleting student:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error deleting student:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

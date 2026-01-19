@@ -9,6 +9,7 @@ Your ClassTrack attendance management system has been fully upgraded to use **Po
 ## 🎁 What You Got
 
 ### Backend System (19 New Files)
+
 ```
 server/
 ├── src/db/
@@ -34,6 +35,7 @@ server/
 ```
 
 ### Frontend Updates (2 Files)
+
 ```
 Updated:
 ├── src/services/mockApi.ts        # Now calls REST API
@@ -43,6 +45,7 @@ Created:
 ```
 
 ### Documentation (6 Files)
+
 ```
 ├── START_HERE.md                  # ← Read first! Quick start
 ├── QUICKSTART.md                  # 5-minute setup guide
@@ -59,6 +62,7 @@ Created:
 ## 🗄️ Database
 
 ### PostgreSQL Schema (4 Tables)
+
 ```
 users                    → Store admin/teacher accounts
   └─ teachers          → Teacher profiles
@@ -67,8 +71,9 @@ users                    → Store admin/teacher accounts
 ```
 
 ### Seed Data Included
+
 - 1 Admin user
-- 2 Teacher users  
+- 2 Teacher users
 - 5 Sample students
 - Ready for testing immediately
 
@@ -76,19 +81,19 @@ users                    → Store admin/teacher accounts
 
 ## 🔌 API Endpoints (10 Total)
 
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| POST | /api/auth/login | Login |
-| GET | /api/auth/user/:id | Get user |
-| GET | /api/auth/teachers | List teachers |
-| POST | /api/auth/teachers | Create teacher |
-| DELETE | /api/auth/teachers/:id | Delete teacher |
-| GET | /api/students | List students |
-| POST | /api/students | Create student |
-| DELETE | /api/students/:id | Delete student |
-| GET | /api/attendance | Get/filter attendance |
-| POST | /api/attendance | Save attendance |
-| GET | /api/admin/stats | System stats |
+| Method | Endpoint               | Purpose               |
+| ------ | ---------------------- | --------------------- |
+| POST   | /api/auth/login        | Login                 |
+| GET    | /api/auth/user/:id     | Get user              |
+| GET    | /api/auth/teachers     | List teachers         |
+| POST   | /api/auth/teachers     | Create teacher        |
+| DELETE | /api/auth/teachers/:id | Delete teacher        |
+| GET    | /api/students          | List students         |
+| POST   | /api/students          | Create student        |
+| DELETE | /api/students/:id      | Delete student        |
+| GET    | /api/attendance        | Get/filter attendance |
+| POST   | /api/attendance        | Save attendance       |
+| GET    | /api/admin/stats       | System stats          |
 
 ---
 
@@ -106,12 +111,14 @@ users                    → Store admin/teacher accounts
 ## 📊 Tech Stack
 
 **Frontend:**
+
 - React 18
 - TypeScript
 - Tailwind CSS
 - Vite
 
 **Backend:**
+
 - Node.js
 - Express
 - TypeScript
@@ -124,6 +131,7 @@ users                    → Store admin/teacher accounts
 ## 🚀 Getting Started (4 Steps)
 
 ### 1. PostgreSQL Setup
+
 ```bash
 psql -U postgres
 CREATE DATABASE classtrack_db;
@@ -131,6 +139,7 @@ CREATE DATABASE classtrack_db;
 ```
 
 ### 2. Backend Setup
+
 ```bash
 cd server
 npm install
@@ -139,19 +148,23 @@ npm run dev
 ```
 
 ### 3. Frontend Setup (new terminal)
+
 ```bash
 npm install
 npm run dev
 ```
 
 ### 4. Login!
+
 Visit: http://localhost:5173
+
 ```
 Email: admin@classtrack.com
 Password: admin123
 ```
 
 **Or run both together:**
+
 ```bash
 npm run dev:full
 ```
@@ -160,14 +173,14 @@ npm run dev:full
 
 ## 📚 Documentation Quick Links
 
-| File | Purpose |
-|------|---------|
-| **START_HERE.md** | 👈 Read this first! |
-| QUICKSTART.md | 5-min setup |
-| SETUP.md | Detailed guide + troubleshooting |
-| API.md | Endpoint reference |
-| POSTGRES_COMMANDS.md | Database CLI |
-| README_POSTGRESQL.md | Complete overview |
+| File                 | Purpose                          |
+| -------------------- | -------------------------------- |
+| **START_HERE.md**    | 👈 Read this first!              |
+| QUICKSTART.md        | 5-min setup                      |
+| SETUP.md             | Detailed guide + troubleshooting |
+| API.md               | Endpoint reference               |
+| POSTGRES_COMMANDS.md | Database CLI                     |
+| README_POSTGRESQL.md | Complete overview                |
 
 ---
 
@@ -189,6 +202,7 @@ npm run dev:full
 ## 📝 Key Changes
 
 ### Before ❌
+
 ```
 Frontend Only
 ↓
@@ -198,6 +212,7 @@ Data lost on clear
 ```
 
 ### After ✅
+
 ```
 React Frontend
 ↓
@@ -213,11 +228,13 @@ Persistent Data Forever
 ## 🔧 Configuration
 
 **.env (Frontend)**
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
 **server/.env (Backend)**
+
 ```env
 DB_USER=postgres
 DB_PASSWORD=postgres
@@ -252,7 +269,7 @@ Admin:
 Teachers:
   Email: teacher@classtrack.com (Ms. Krabappel)
   Password: teacher123
-  
+
   Email: hoover@classtrack.com (Ms. Hoover)
   Password: teacher123
 
@@ -281,11 +298,13 @@ Demo Students:
 ## 🆘 Need Help?
 
 **Quick Issues:**
+
 - Can't connect to database? → Check PostgreSQL is running
 - Port already in use? → See SETUP.md troubleshooting
 - Module not found? → Run `npm install` in root and server/
 
 **Detailed Help:**
+
 - Read **START_HERE.md** for quick start
 - Read **SETUP.md** for comprehensive guide
 - Read **API.md** for endpoint details
@@ -296,6 +315,7 @@ Demo Students:
 ## 🎉 You're All Set!
 
 Your attendance management system is now:
+
 - ✅ Database-backed (PostgreSQL)
 - ✅ API-driven (Express)
 - ✅ Type-safe (TypeScript)

@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'teacher';
+  role: "admin" | "teacher";
   createdAt: string;
 }
 
@@ -18,6 +18,6 @@ export interface AttendanceRecord {
   date: string;
   studentId: string;
   teacherId: string;
-  status: 'present' | 'absent';
+  status: "present" | "absent";
   markedAt: string;
 }

@@ -15,7 +15,9 @@ Your attendance management system has been successfully upgraded from a local st
 ## What Was Created
 
 ### Backend System (`/server`)
+
 A complete Node.js/Express backend with:
+
 - **Database Layer** - PostgreSQL connection pooling
 - **Services** - Auth, Student, Attendance, Admin logic
 - **API Routes** - RESTful endpoints
@@ -23,6 +25,7 @@ A complete Node.js/Express backend with:
 - **Seed Data** - Demo users and students
 
 ### Database (`PostgreSQL`)
+
 ```
 classtrack_db/
 ├── users (admin, teachers)
@@ -32,7 +35,9 @@ classtrack_db/
 ```
 
 ### Frontend Updates
+
 Modified React to call the backend API instead of localStorage:
+
 - `src/services/mockApi.ts` → Now makes HTTP requests
 - `package.json` → Added dev:full script
 - `.env` → API configuration
@@ -42,12 +47,14 @@ Modified React to call the backend API instead of localStorage:
 ## Quick Start (3 Steps)
 
 ### Step 1: Create Database
+
 ```bash
 psql -U postgres
 CREATE DATABASE classtrack_db;
 ```
 
 ### Step 2: Set Up Backend
+
 ```bash
 cd server
 npm install
@@ -58,12 +65,14 @@ npm run dev
 ```
 
 ### Step 3: Set Up Frontend
+
 ```bash
 npm install
 npm run dev
 ```
 
 ### Run Both Together
+
 ```bash
 npm run dev:full
 ```
@@ -82,7 +91,7 @@ Admin Account:
 Teacher Accounts:
   Email: teacher@classtrack.com    (Ms. Krabappel)
   Password: teacher123
-  
+
   Email: hoover@classtrack.com     (Ms. Hoover)
   Password: teacher123
 ```
@@ -92,21 +101,25 @@ Teacher Accounts:
 ## API Endpoints Summary
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `GET /api/auth/teachers` - List teachers
 - `POST /api/auth/teachers` - Create teacher
 - `DELETE /api/auth/teachers/:id` - Delete teacher
 
 ### Student Management
+
 - `GET /api/students` - List students
 - `POST /api/students` - Create student
 - `DELETE /api/students/:id` - Delete student
 
 ### Attendance
+
 - `GET /api/attendance` - Get records
 - `POST /api/attendance` - Save records
 
 ### Admin
+
 - `GET /api/admin/stats` - System statistics
 
 ➡️ See **API.md** for complete documentation
@@ -161,6 +174,7 @@ Class/
 ## Database Schema
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
   id VARCHAR(36) PRIMARY KEY,
@@ -174,6 +188,7 @@ CREATE TABLE users (
 ```
 
 ### Teachers Table
+
 ```sql
 CREATE TABLE teachers (
   id VARCHAR(36) PRIMARY KEY,
@@ -185,6 +200,7 @@ CREATE TABLE teachers (
 ```
 
 ### Students Table
+
 ```sql
 CREATE TABLE students (
   id VARCHAR(36) PRIMARY KEY,
@@ -196,6 +212,7 @@ CREATE TABLE students (
 ```
 
 ### Attendance Records Table
+
 ```sql
 CREATE TABLE attendance_records (
   id VARCHAR(36) PRIMARY KEY,
@@ -213,12 +230,14 @@ CREATE TABLE attendance_records (
 ## Technology Stack
 
 ### Frontend
+
 - React 18
 - TypeScript
 - Tailwind CSS
 - Vite (build tool)
 
 ### Backend
+
 - Node.js
 - Express
 - TypeScript
@@ -227,6 +246,7 @@ CREATE TABLE attendance_records (
 - uuid (ID generation)
 
 ### Tools
+
 - concurrently (run multiple commands)
 - tsx (TypeScript execution)
 - pg (PostgreSQL client)
@@ -253,11 +273,13 @@ CREATE TABLE attendance_records (
 ## Configuration
 
 ### Frontend (.env)
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
 ### Backend (server/.env)
+
 ```env
 DB_USER=postgres
 DB_PASSWORD=your_password
@@ -295,6 +317,7 @@ npm run server:migrate           # Initialize DB from root
 ## Troubleshooting
 
 ### Database Connection Error
+
 ```bash
 # Check PostgreSQL is running
 psql -U postgres
@@ -306,6 +329,7 @@ psql -U postgres -l | grep classtrack_db
 ```
 
 ### Port Already in Use
+
 ```bash
 # Find process on port 5000
 netstat -ano | findstr :5000
@@ -313,6 +337,7 @@ taskkill /PID <PID> /F
 ```
 
 ### Reset Database
+
 ```bash
 cd server
 npm run migrate      # Will recreate schema if needed
@@ -323,13 +348,15 @@ npm run migrate      # Will recreate schema if needed
 ## Data Migration
 
 If you had data in localStorage, you can:
+
 1. Export localStorage data
 2. Create API endpoints to import
 3. Write migration scripts
 
 Currently, the system starts with seed data:
+
 - 1 Admin user
-- 2 Teacher users  
+- 2 Teacher users
 - 5 Sample students
 - 0 Attendance records (you'll add as you use the system)
 
@@ -381,11 +408,13 @@ To deploy this system:
 ### Common Issues
 
 **"Cannot find module 'dotenv'"**
+
 ```bash
 cd server && npm install
 ```
 
 **"Connection refused"**
+
 ```bash
 # Start PostgreSQL
 # Windows: Check Services
@@ -394,6 +423,7 @@ cd server && npm install
 ```
 
 **"EADDRINUSE: address already in use"**
+
 ```bash
 # Change PORT in server/.env or kill the process
 ```

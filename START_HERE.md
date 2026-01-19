@@ -7,12 +7,15 @@ Your ClassTrack attendance system has been upgraded to use **PostgreSQL database
 ## What You Need to Do (4 Steps)
 
 ### Step 1️⃣: Install PostgreSQL
+
 - **Windows:** Download from https://www.postgresql.org/download/windows/
 - **Mac:** `brew install postgresql` then `brew services start postgresql`
 - **Linux:** `sudo apt-get install postgresql postgresql-contrib` then `sudo systemctl start postgresql`
 
 ### Step 2️⃣: Create Database
+
 Open terminal and run:
+
 ```bash
 psql -U postgres
 CREATE DATABASE classtrack_db;
@@ -20,6 +23,7 @@ CREATE DATABASE classtrack_db;
 ```
 
 ### Step 3️⃣: Setup Backend
+
 ```bash
 cd server
 npm install
@@ -30,12 +34,14 @@ npm run dev
 ```
 
 You should see:
+
 ```
 ✓ Database connected
 ✓ Server running on http://localhost:5000
 ```
 
 ### Step 4️⃣: Setup Frontend (new terminal)
+
 ```bash
 npm install
 npm run dev
@@ -62,6 +68,7 @@ Teachers:
 ## Run Both Together
 
 In your project root:
+
 ```bash
 npm run dev:full
 ```
@@ -83,6 +90,7 @@ This runs frontend and backend at the same time!
 ## 🆘 Common Issues
 
 ### "Cannot connect to database"
+
 ```bash
 # Check PostgreSQL is running
 psql -U postgres
@@ -91,12 +99,14 @@ psql -U postgres
 ```
 
 ### "Port 5000 already in use"
+
 ```bash
 netstat -ano | findstr :5000
 taskkill /PID <PID> /F
 ```
 
 ### "Module not found"
+
 ```bash
 cd server && npm install
 npm install
@@ -173,6 +183,7 @@ Class/
 ## 🎓 Summary
 
 You now have a **professional attendance system** with:
+
 - PostgreSQL database
 - Express API backend
 - Secure authentication

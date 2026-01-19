@@ -1,4 +1,4 @@
-import pool from '../db/pool.js';
+import pool from "../db/pool.js";
 
 interface TeacherStatsRow {
   id: string;
@@ -12,12 +12,12 @@ interface TeacherStatsRow {
 export async function getAdminStats() {
   try {
     const teachersResult = await pool.query(
-      `SELECT COUNT(*) as count FROM users WHERE role = 'teacher'`
+      `SELECT COUNT(*) as count FROM users WHERE role = 'teacher'`,
     );
     const totalTeachers = parseInt(teachersResult.rows[0].count);
 
     const studentsResult = await pool.query(
-      `SELECT COUNT(*) as count FROM students`
+      `SELECT COUNT(*) as count FROM students`,
     );
     const totalStudents = parseInt(studentsResult.rows[0].count);
 
@@ -34,17 +34,19 @@ export async function getAdminStats() {
        LEFT JOIN students s ON t.id = s.teacher_id
        WHERE u.role = 'teacher'
        GROUP BY u.id, u.email, u.name, u.role, u.created_at
-       ORDER BY u.name`
+       ORDER BY u.name`,
     );
 
-    const teacherStats = teacherStatsResult.rows.map((row: TeacherStatsRow) => ({
-      id: row.id,
-      email: row.email,
-      name: row.name,
-      role: row.role,
-      createdAt: row.created_at,
-      studentCount: parseInt(row.student_count),
-    }));
+    const teacherStats = teacherStatsResult.rows.map(
+      (row: TeacherStatsRow) => ({
+        id: row.id,
+        email: row.email,
+        name: row.name,
+        role: row.role,
+        createdAt: row.created_at,
+        studentCount: parseInt(row.student_count),
+      }),
+    );
 
     return {
       totalTeachers,
@@ -52,7 +54,7 @@ export async function getAdminStats() {
       teacherStats,
     };
   } catch (error) {
-    console.error('Error getting admin stats:', error);
+    console.error("Error getting admin stats:", error);
     throw error;
   }
 }

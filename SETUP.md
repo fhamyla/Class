@@ -18,13 +18,14 @@ This project now uses a **PostgreSQL database** with a **Node.js/Express backend
    - Keep the port as `5432` (default)
 
 2. **Create Database**
+
    ```bash
    # Open PostgreSQL command line (psql)
    # Windows: Search for "SQL Shell (psql)" in Start Menu
-   
+
    # Or from command line:
    psql -U postgres
-   
+
    # Then run:
    CREATE DATABASE classtrack_db;
    ```
@@ -66,6 +67,7 @@ npm run migrate
 ```
 
 This will:
+
 - Create all tables (users, teachers, students, attendance_records)
 - Create indexes for performance
 - Seed initial data with demo users
@@ -100,20 +102,22 @@ npm run dev:full
 ```
 
 This uses `concurrently` to run:
+
 - Frontend dev server (Vite)
 - Backend dev server (Express)
 
 ## Default Credentials
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `admin@classtrack.com` | `admin123` |
+| Role      | Email                    | Password     |
+| --------- | ------------------------ | ------------ |
+| Admin     | `admin@classtrack.com`   | `admin123`   |
 | Teacher 1 | `teacher@classtrack.com` | `teacher123` |
-| Teacher 2 | `hoover@classtrack.com` | `teacher123` |
+| Teacher 2 | `hoover@classtrack.com`  | `teacher123` |
 
 ## Database Schema
 
 ### Users Table
+
 - `id` (UUID, PK)
 - `email` (Unique)
 - `password_hash` (bcrypt)
@@ -122,6 +126,7 @@ This uses `concurrently` to run:
 - `created_at`, `updated_at`
 
 ### Teachers Table
+
 - `id` (UUID, PK)
 - `user_id` (FK → users)
 - `name`
@@ -129,12 +134,14 @@ This uses `concurrently` to run:
 - `created_at`
 
 ### Students Table
+
 - `id` (UUID, PK)
 - `name`
 - `teacher_id` (FK → teachers)
 - `created_at`, `updated_at`
 
 ### Attendance Records Table
+
 - `id` (UUID, PK)
 - `student_id` (FK → students)
 - `teacher_id` (FK → teachers)
@@ -146,6 +153,7 @@ This uses `concurrently` to run:
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - Login
 - `GET /api/auth/user/:id` - Get user
 - `GET /api/auth/teachers` - List teachers
@@ -153,16 +161,19 @@ This uses `concurrently` to run:
 - `DELETE /api/auth/teachers/:id` - Delete teacher
 
 ### Students
+
 - `GET /api/students?teacherId=...` - Get students
 - `POST /api/students` - Create student
 - `DELETE /api/students/:id` - Delete student
 
 ### Attendance
+
 - `GET /api/attendance?date=YYYY-MM-DD&teacherId=...` - Get attendance
 - `GET /api/attendance?studentId=...` - Get history
 - `POST /api/attendance` - Save attendance
 
 ### Admin
+
 - `GET /api/admin/stats` - Get statistics
 
 ## Troubleshooting
@@ -170,6 +181,7 @@ This uses `concurrently` to run:
 ### "Cannot connect to database" error
 
 1. Verify PostgreSQL is running:
+
    ```bash
    # Windows: Check Services (Services.msc)
    # Linux: systemctl status postgresql
@@ -216,11 +228,13 @@ npm run migrate
 ## Environment Variables
 
 ### Frontend (.env)
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
 ### Backend (server/.env)
+
 ```env
 DB_USER=postgres
 DB_PASSWORD=postgres
@@ -266,6 +280,7 @@ Class/
 ## Production Deployment
 
 For production:
+
 1. Use environment-specific `.env` files
 2. Set `NODE_ENV=production`
 3. Use connection pooling

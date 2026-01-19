@@ -1,6 +1,7 @@
 # Quick Start Guide
 
 ## Prerequisites
+
 - Node.js 16+
 - PostgreSQL 12+
 
@@ -9,19 +10,24 @@
 ### 1. PostgreSQL Database Setup
 
 **Windows:**
+
 1. Download from https://www.postgresql.org/download/windows/
 2. Install and remember your postgres password
 3. Open PowerShell and run:
+
 ```powershell
 psql -U postgres
 ```
+
 4. Create database:
+
 ```sql
 CREATE DATABASE classtrack_db;
 \q
 ```
 
 **Mac/Linux:**
+
 ```bash
 brew install postgresql      # Mac
 brew services start postgresql
@@ -58,11 +64,11 @@ Frontend runs on: **http://localhost:5173**
 
 ### 4. Login Credentials
 
-| Type | Email | Password |
-|------|-------|----------|
-| Admin | admin@classtrack.com | admin123 |
+| Type    | Email                  | Password   |
+| ------- | ---------------------- | ---------- |
+| Admin   | admin@classtrack.com   | admin123   |
 | Teacher | teacher@classtrack.com | teacher123 |
-| Teacher | hoover@classtrack.com | teacher123 |
+| Teacher | hoover@classtrack.com  | teacher123 |
 
 ## Run Everything at Once
 
@@ -73,6 +79,7 @@ npm run dev:full
 ## Database Info
 
 All data is stored in PostgreSQL:
+
 - **Host:** localhost
 - **Port:** 5432
 - **Database:** classtrack_db
@@ -82,17 +89,20 @@ All data is stored in PostgreSQL:
 ## Troubleshooting
 
 **Port 5000 in use?**
+
 ```powershell
 netstat -ano | findstr :5000
 taskkill /PID <PID> /F
 ```
 
 **Can't connect to database?**
+
 - Make sure PostgreSQL is running
 - Check .env file has correct password
 - Verify database exists: `psql -U postgres -l`
 
 **Reset database?**
+
 ```powershell
 psql -U postgres -d classtrack_db
 DROP TABLE IF EXISTS attendance_records CASCADE;

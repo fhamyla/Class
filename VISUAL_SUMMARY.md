@@ -390,7 +390,7 @@ After setup, you should see:
 
 ```
 Problem: Cannot connect to database
-Solution: 
+Solution:
   1. Is PostgreSQL running?
   2. Database created? (psql -U postgres -l)
   3. .env has correct password?

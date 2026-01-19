@@ -6,18 +6,17 @@ declare global {
   }
 }
 
-// API Base URL  
-const API_BASE_URL: string = (import.meta.env.VITE_API_URL) || "http://localhost:5000/api";
+const API_BASE_URL: string =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-// Helper to handle API errors
 const handleApiError = (error: unknown): never => {
   if (error instanceof Error) {
     throw error;
   }
   const apiError = error as Record<string, unknown>;
-  if (apiError.response && typeof apiError.response === 'object') {
+  if (apiError.response && typeof apiError.response === "object") {
     const res = apiError.response as Record<string, unknown>;
-    if (res.data && typeof res.data === 'object') {
+    if (res.data && typeof res.data === "object") {
       const data = res.data as Record<string, unknown>;
       if (data.error) {
         throw new Error(String(data.error));
@@ -27,10 +26,7 @@ const handleApiError = (error: unknown): never => {
   throw new Error(String(error));
 };
 
-// --- API Methods ---
-
 export const mockApi = {
-  // Auth
   login: async (email: string, password: string): Promise<User> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -57,7 +53,6 @@ export const mockApi = {
     const stored = localStorage.getItem("ams-current-user");
     return stored ? JSON.parse(stored) : null;
   },
-  // Admin: Teachers
   getTeachers: async (): Promise<User[]> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/teachers`);
@@ -67,7 +62,11 @@ export const mockApi = {
       return handleApiError(error);
     }
   },
-  createTeacher: async (name: string, email: string, password = "teacher123"): Promise<User> => {
+  createTeacher: async (
+    name: string,
+    email: string,
+    password = "teacher123",
+  ): Promise<User> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/teachers`, {
         method: "POST",
@@ -95,10 +94,11 @@ export const mockApi = {
       return handleApiError(error);
     }
   },
-  // Teacher: Students
   getStudentsByTeacher: async (teacherId: string): Promise<Student[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/students?teacherId=${teacherId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/students?teacherId=${teacherId}`,
+      );
       if (!response.ok) throw new Error("Failed to fetch students");
       return await response.json();
     } catch (error) {
@@ -138,13 +138,14 @@ export const mockApi = {
       return handleApiError(error);
     }
   },
-  // Attendance
   getAttendance: async (
     date: string,
     teacherId: string,
   ): Promise<AttendanceRecord[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/attendance?date=${date}&teacherId=${teacherId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/attendance?date=${date}&teacherId=${teacherId}`,
+      );
       if (!response.ok) throw new Error("Failed to fetch attendance");
       return await response.json();
     } catch (error) {
@@ -155,7 +156,9 @@ export const mockApi = {
     studentId: string,
   ): Promise<AttendanceRecord[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/attendance?studentId=${studentId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/attendance?studentId=${studentId}`,
+      );
       if (!response.ok) throw new Error("Failed to fetch attendance history");
       return await response.json();
     } catch (error) {
@@ -183,7 +186,6 @@ export const mockApi = {
       return handleApiError(error);
     }
   },
-  // Stats
   getAdminStats: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/stats`);

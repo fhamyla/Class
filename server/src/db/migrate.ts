@@ -1,39 +1,39 @@
-import pool from './pool.js';
-import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcryptjs';
+import pool from "./pool.js";
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
 
 const SEED_USERS = [
   {
-    email: 'admin@classtrack.com',
-    password: 'admin123',
-    name: 'Principal Skinner',
-    role: 'admin',
+    email: "admin@classtrack.com",
+    password: "admin123",
+    name: "Principal Skinner",
+    role: "admin",
   },
   {
-    email: 'teacher@classtrack.com',
-    password: 'teacher123',
-    name: 'Ms. Krabappel',
-    role: 'teacher',
+    email: "teacher@classtrack.com",
+    password: "teacher123",
+    name: "Ms. Krabappel",
+    role: "teacher",
   },
   {
-    email: 'hoover@classtrack.com',
-    password: 'teacher123',
-    name: 'Ms. Hoover',
-    role: 'teacher',
+    email: "hoover@classtrack.com",
+    password: "teacher123",
+    name: "Ms. Hoover",
+    role: "teacher",
   },
 ];
 
 const SEED_STUDENTS = [
-  { name: 'Bart Simpson', teacherEmail: 'teacher@classtrack.com' },
-  { name: 'Milhouse Van Houten', teacherEmail: 'teacher@classtrack.com' },
-  { name: 'Martin Prince', teacherEmail: 'teacher@classtrack.com' },
-  { name: 'Lisa Simpson', teacherEmail: 'hoover@classtrack.com' },
-  { name: 'Ralph Wiggum', teacherEmail: 'hoover@classtrack.com' },
+  { name: "Bart Simpson", teacherEmail: "teacher@classtrack.com" },
+  { name: "Milhouse Van Houten", teacherEmail: "teacher@classtrack.com" },
+  { name: "Martin Prince", teacherEmail: "teacher@classtrack.com" },
+  { name: "Lisa Simpson", teacherEmail: "hoover@classtrack.com" },
+  { name: "Ralph Wiggum", teacherEmail: "hoover@classtrack.com" },
 ];
 
 export async function initializeDatabase() {
   try {
-    console.log('Initializing database...');
+    console.log("Initializing database...");
 
     // Create users table
     await pool.query(`
@@ -47,7 +47,7 @@ export async function initializeDatabase() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('✓ Users table created');
+    console.log("✓ Users table created");
 
     // Create teachers table
     await pool.query(`
@@ -60,7 +60,7 @@ export async function initializeDatabase() {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       );
     `);
-    console.log('✓ Teachers table created');
+    console.log("✓ Teachers table created");
 
     // Create students table
     await pool.query(`
@@ -73,7 +73,7 @@ export async function initializeDatabase() {
         FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE
       );
     `);
-    console.log('✓ Students table created');
+    console.log("✓ Students table created");
 
     // Create attendance_records table
     await pool.query(`
@@ -89,86 +89,94 @@ export async function initializeDatabase() {
         UNIQUE (student_id, date)
       );
     `);
-    console.log('✓ Attendance records table created');
+    console.log("✓ Attendance records table created");
 
     // Create indexes
-    await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`);
-    await pool.query(`CREATE INDEX IF NOT EXISTS idx_students_teacher ON students(teacher_id);`);
-    await pool.query(`CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance_records(date);`);
-    await pool.query(`CREATE INDEX IF NOT EXISTS idx_attendance_student ON attendance_records(student_id);`);
-    console.log('✓ Indexes created');
+    await pool.query(
+      `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
+    );
+    await pool.query(
+      `CREATE INDEX IF NOT EXISTS idx_students_teacher ON students(teacher_id);`,
+    );
+    await pool.query(
+      `CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance_records(date);`,
+    );
+    await pool.query(
+      `CREATE INDEX IF NOT EXISTS idx_attendance_student ON attendance_records(student_id);`,
+    );
+    console.log("✓ Indexes created");
 
     // Seed users
     for (const user of SEED_USERS) {
       const existingUser = await pool.query(
-        'SELECT id FROM users WHERE email = $1',
-        [user.email]
+        "SELECT id FROM users WHERE email = $1",
+        [user.email],
       );
-      
+
       if (existingUser.rows.length === 0) {
         const id = uuidv4();
         const passwordHash = await bcrypt.hash(user.password, 10);
         await pool.query(
-          'INSERT INTO users (id, email, password_hash, role, name) VALUES ($1, $2, $3, $4, $5)',
-          [id, user.email, passwordHash, user.role, user.name]
+          "INSERT INTO users (id, email, password_hash, role, name) VALUES ($1, $2, $3, $4, $5)",
+          [id, user.email, passwordHash, user.role, user.name],
         );
       }
     }
-    console.log('✓ Users seeded');
+    console.log("✓ Users seeded");
 
     // Seed teachers and students
     for (const user of SEED_USERS) {
-      if (user.role === 'teacher') {
+      if (user.role === "teacher") {
         const userResult = await pool.query(
-          'SELECT id FROM users WHERE email = $1',
-          [user.email]
+          "SELECT id FROM users WHERE email = $1",
+          [user.email],
         );
         const userId = userResult.rows[0].id;
 
         const existingTeacher = await pool.query(
-          'SELECT id FROM teachers WHERE user_id = $1',
-          [userId]
+          "SELECT id FROM teachers WHERE user_id = $1",
+          [userId],
         );
 
         if (existingTeacher.rows.length === 0) {
           const teacherId = uuidv4();
           await pool.query(
-            'INSERT INTO teachers (id, user_id, name, email) VALUES ($1, $2, $3, $4)',
-            [teacherId, userId, user.name, user.email]
+            "INSERT INTO teachers (id, user_id, name, email) VALUES ($1, $2, $3, $4)",
+            [teacherId, userId, user.name, user.email],
           );
         }
       }
     }
-    console.log('✓ Teachers seeded');
+    console.log("✓ Teachers seeded");
 
     // Seed students
     for (const student of SEED_STUDENTS) {
       const teacherResult = await pool.query(
-        'SELECT id FROM teachers WHERE email = $1',
-        [student.teacherEmail]
+        "SELECT id FROM teachers WHERE email = $1",
+        [student.teacherEmail],
       );
-      
+
       if (teacherResult.rows.length > 0) {
         const teacherId = teacherResult.rows[0].id;
         const existingStudent = await pool.query(
-          'SELECT id FROM students WHERE name = $1 AND teacher_id = $2',
-          [student.name, teacherId]
+          "SELECT id FROM students WHERE name = $1 AND teacher_id = $2",
+          [student.name, teacherId],
         );
 
         if (existingStudent.rows.length === 0) {
           const studentId = uuidv4();
           await pool.query(
-            'INSERT INTO students (id, name, teacher_id) VALUES ($1, $2, $3)',
-            [studentId, student.name, teacherId]
+            "INSERT INTO students (id, name, teacher_id) VALUES ($1, $2, $3)",
+            [studentId, student.name, teacherId],
           );
         }
       }
     }
-    console.log('✓ Students seeded');
+    console.log("✓ Students seeded");
 
-    console.log('✓ Database initialized successfully!');
+    console.log("✓ Database initialized successfully!");
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error("Error initializing database:", error);
     throw error;
   }
 }
