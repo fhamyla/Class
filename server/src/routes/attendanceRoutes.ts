@@ -7,7 +7,6 @@ import {
 
 const router = express.Router();
 
-// GET /api/attendance?date=YYYY-MM-DD&teacherId=...
 router.get("/", async (req: Request, res: Response) => {
   try {
     const { date, studentId } = req.query;
@@ -34,7 +33,6 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/attendance
 router.post("/", async (req: Request, res: Response) => {
   try {
     const { date, teacherId, updates } = req.body;

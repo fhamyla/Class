@@ -35,7 +35,6 @@ export async function initializeDatabase() {
   try {
     console.log("Initializing database...");
 
-    // Create users table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id VARCHAR(36) PRIMARY KEY,
@@ -49,7 +48,6 @@ export async function initializeDatabase() {
     `);
     console.log("✓ Users table created");
 
-    // Create teachers table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS teachers (
         id VARCHAR(36) PRIMARY KEY,
@@ -62,7 +60,6 @@ export async function initializeDatabase() {
     `);
     console.log("✓ Teachers table created");
 
-    // Create students table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS students (
         id VARCHAR(36) PRIMARY KEY,
@@ -75,7 +72,6 @@ export async function initializeDatabase() {
     `);
     console.log("✓ Students table created");
 
-    // Create attendance_records table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS attendance_records (
         id VARCHAR(36) PRIMARY KEY,
@@ -91,7 +87,6 @@ export async function initializeDatabase() {
     `);
     console.log("✓ Attendance records table created");
 
-    // Create indexes
     await pool.query(
       `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
     );
@@ -106,7 +101,6 @@ export async function initializeDatabase() {
     );
     console.log("✓ Indexes created");
 
-    // Seed users
     for (const user of SEED_USERS) {
       const existingUser = await pool.query(
         "SELECT id FROM users WHERE email = $1",
@@ -124,7 +118,6 @@ export async function initializeDatabase() {
     }
     console.log("✓ Users seeded");
 
-    // Seed teachers and students
     for (const user of SEED_USERS) {
       if (user.role === "teacher") {
         const userResult = await pool.query(
@@ -149,7 +142,6 @@ export async function initializeDatabase() {
     }
     console.log("✓ Teachers seeded");
 
-    // Seed students
     for (const student of SEED_STUDENTS) {
       const teacherResult = await pool.query(
         "SELECT id FROM teachers WHERE email = $1",

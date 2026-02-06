@@ -72,7 +72,6 @@ export async function saveAttendance(
     try {
       await client.query("BEGIN");
 
-      // Delete existing records for these students on this date
       const studentIds = updates.map((u) => u.studentId);
       if (studentIds.length > 0) {
         const placeholders = studentIds.map((_, i) => `$${i + 1}`).join(",");
@@ -82,7 +81,6 @@ export async function saveAttendance(
         );
       }
 
-      // Insert new records
       for (const update of updates) {
         const id = uuidv4();
         const markedAt = new Date().toISOString();

@@ -4,8 +4,6 @@ import { Navbar } from "./components/Navbar";
 import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { TeacherDashboard } from "./components/teacher/TeacherDashboard";
 import { Loader2 } from "lucide-react";
-// Simple Router Component since we don't have react-router-dom installed in the base template usually
-// In a real app, use react-router-dom
 function AppContent() {
   const { user, isLoading } = useAuth();
   if (isLoading) {

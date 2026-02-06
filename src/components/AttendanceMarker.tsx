@@ -9,7 +9,6 @@ interface AttendanceMarkerProps {
     date: string,
     records: Record<string, AttendanceStatus>,
   ) => void;
-  // Changed to accept the full history so we can look up any date selected
   history?: Record<string, Record<string, AttendanceStatus>>;
 }
 export function AttendanceMarker({
@@ -22,7 +21,6 @@ export function AttendanceMarker({
     Record<string, AttendanceStatus>
   >({});
   const [isSaved, setIsSaved] = useState(false);
-  // Load existing attendance when date changes
   useEffect(() => {
     if (history[date]) {
       setAttendance(history[date]);

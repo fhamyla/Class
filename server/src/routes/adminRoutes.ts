@@ -3,7 +3,6 @@ import { getAdminStats } from "../services/adminService.js";
 
 const router = express.Router();
 
-// GET /api/admin/stats
 router.get("/stats", async (req: Request, res: Response) => {
   try {
     const stats = await getAdminStats();

@@ -92,7 +92,6 @@ export function AdminDashboard() {
     return <div className="p-8 text-center">Unable to load dashboard data</div>;
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-warm-gray/20 flex items-center justify-between">
           <div>
@@ -118,7 +117,6 @@ export function AdminDashboard() {
         </div>
       </div>
 
-      {/* Teacher Management */}
       <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-xl font-bold text-gray-900">

@@ -8,7 +8,6 @@ import {
 
 const router = express.Router();
 
-// GET /api/students?teacherId=...
 router.get("/", async (req: Request, res: Response) => {
   try {
     const { teacherId } = req.query;
@@ -26,7 +25,6 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/students
 router.post("/", async (req: Request, res: Response) => {
   try {
     const { name, teacherId } = req.body;
@@ -43,7 +41,6 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-// DELETE /api/students/:id
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     await deleteStudent(req.params.id);

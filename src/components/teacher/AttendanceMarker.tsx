@@ -18,7 +18,6 @@ export function AttendanceMarker({ students, onSave }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-  // Load existing attendance for selected date
   useEffect(() => {
     const loadAttendance = async () => {
       if (!user) return;
@@ -62,7 +61,7 @@ export function AttendanceMarker({ students, onSave }: Props) {
       }));
       await mockApi.saveAttendance(date, user.id, updates);
       setSuccessMsg("Attendance saved successfully!");
-      onSave(); // Refresh parent data
+      onSave();
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (error) {
       alert("Failed to save attendance");

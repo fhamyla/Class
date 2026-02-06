@@ -44,7 +44,6 @@ export function TeacherDashboard() {
   ).length;
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Dashboard Navigation */}
       <div className="flex flex-wrap gap-1 bg-white p-1 rounded-lg border border-warm-gray/20 shadow-sm">
         <button
           onClick={() => setActiveTab("overview")}

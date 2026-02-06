@@ -70,7 +70,7 @@ export function AttendanceHistory({
             <ul className="divide-y divide-warm-gray/20">
               {students.map((student) => {
                 const status = currentRecords[student.id];
-                if (!status) return null; // Only show marked students? Or show all with status? Let's show all.
+                if (!status) return null;
                 return (
                   <li
                     key={student.id}

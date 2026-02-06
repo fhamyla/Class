@@ -9,7 +9,6 @@ import {
 
 const router = express.Router();
 
-// POST /api/auth/login
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -31,7 +30,6 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/auth/user/:id
 router.get("/user/:id", async (req: Request, res: Response) => {
   try {
     const user = await getUserById(req.params.id);
@@ -45,7 +43,6 @@ router.get("/user/:id", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/auth/teachers
 router.get("/teachers", async (req: Request, res: Response) => {
   try {
     const teachers = await getTeachers();
@@ -56,7 +53,6 @@ router.get("/teachers", async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/auth/teachers
 router.post("/teachers", async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
@@ -79,7 +75,6 @@ router.post("/teachers", async (req: Request, res: Response) => {
   }
 });
 
-// DELETE /api/auth/teachers/:id
 router.delete("/teachers/:id", async (req: Request, res: Response) => {
   try {
     await deleteTeacher(req.params.id);
